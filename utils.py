@@ -39,3 +39,15 @@ def str_bases(ohe):
         bases += str_base(ohe[i])
     
     return bases    
+
+def tokenize_bases(bases_lists):
+    debug_print(['tokenizing encoding bases'])
+    tokenized = np.zeros((len(bases_lists), len(bases_lists[0])))
+    for i, bases_list in enumerate(bases_lists):
+        for j, base in enumerate(bases_list):
+            if j >= len(bases_lists[0]): continue
+            if base == 'a': tokenized[i, j] = 0
+            if base == 'g': tokenized[i, j] = 1
+            if base == 'c': tokenized[i, j] = 2
+            if base == 't': tokenized[i, j] = 3
+    return tokenized
