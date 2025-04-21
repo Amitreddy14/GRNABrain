@@ -51,3 +51,13 @@ def tokenize_bases(bases_lists):
             if base == 'c': tokenized[i, j] = 2
             if base == 't': tokenized[i, j] = 3
     return tokenized
+
+def prediction_to_sequence(prediction):
+    seq = ''
+    for base in prediction:
+        nucleotide = np.argmax(base)
+        if nucleotide == 0: seq += 'A'
+        elif nucleotide == 1: seq += 'C'
+        elif nucleotide == 2: seq += 'G'
+        elif nucleotide == 3: seq += 'T'
+    return seq
