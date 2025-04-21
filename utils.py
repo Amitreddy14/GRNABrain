@@ -32,3 +32,10 @@ def str_base(ohe):
     if np.argmax(ohe) == 1: return 'g'
     if np.argmax(ohe) == 2: return 'c'
     if np.argmax(ohe) == 3: return 't' 
+
+def str_bases(ohe):
+    bases = ''
+    for i in range(len(ohe)):
+        bases += str_base(ohe[i])
+    
+    return bases    
