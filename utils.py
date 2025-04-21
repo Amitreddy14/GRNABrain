@@ -25,3 +25,10 @@ def ohe_bases(bases_lists):
             if j >= len(bases_lists[0]): continue
             ohe[i, j] = ohe_base(base)
     return ohe
+
+def str_base(ohe):
+    ohe = ohe[:4]
+    if np.argmax(ohe) == 0: return 'a'
+    if np.argmax(ohe) == 1: return 'g'
+    if np.argmax(ohe) == 2: return 'c'
+    if np.argmax(ohe) == 3: return 't' 
