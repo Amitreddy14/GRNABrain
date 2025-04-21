@@ -19,3 +19,11 @@ def read_genome(path=REFERENCE_GENOME_PATH):
     debug_print(['loading genomic data from', path])
     for record in SeqIO.parse(path, 'fasta'):
         GENOME_SEQUENCES[record.id.split('.')[0]] = record.seq
+
+def fetch_genomic_sequence(chromosome, start, end, a=0):
+    chromosome_id = f'NC_0000{chromosome}'
+    genome_sequence = GENOME_SEQUENCES.get(chromosome_id)
+    if genome_sequence:
+        return str(genome_sequence[start - a:end + a + 1]) # start - 1
+    else:
+        raise ValueError(f'chromosome {chromosome_id} not found in the genome file.')        
