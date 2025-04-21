@@ -26,4 +26,16 @@ def fetch_genomic_sequence(chromosome, start, end, a=0):
     if genome_sequence:
         return str(genome_sequence[start - a:end + a + 1]) # start - 1
     else:
-        raise ValueError(f'chromosome {chromosome_id} not found in the genome file.')        
+        raise ValueError(f'chromosome {chromosome_id} not found in the genome file.') 
+
+def fetch_epigenomic_signals(chromosome, start, end, a=0):
+    signals = np.zeros((end - start + 1 + 2 * a, 4))
+    
+    chromosome = 'chr' + str(int(chromosome))
+    
+    h3k4me_file = pyBigWig.open(H3K4ME3_PATH)
+    rrbs_file = pyBigWig.open(RRBS_PATH)
+    dnase_file = pyBigWig.open(DNASE_PATH)
+    ctcf_file = pyBigWig.open(CTCF_PATH)
+    
+    # print(chromosome, start - a, end  + a + 1)           
