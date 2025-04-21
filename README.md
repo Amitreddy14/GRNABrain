@@ -8,9 +8,11 @@ The advent of Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR)
 
 LIGAND can sucessfully generate and discriminate biologically-validated activity for arbitrary DNA/epigenomic/gRNA pairings, including the consideration of offsite effects in both generation and discrimination. For particular gene knockout regions, we can design gRNA to specifically cleave in those regions while maintaining minimal off-site effects.
 
+![Screenshot 2025-04-21 020052](https://github.com/user-attachments/assets/65b971bf-fd30-494c-8075-c0150d3b7a2b)
 
 *Average predicted activity over DNA region for validated gRNA*
 
+![Screenshot 2025-04-21 020145](https://github.com/user-attachments/assets/a89894f8-6bbd-4516-8e1d-3fd07cf9baf7)
 
 
 *Generation and top-5 evaluation of candidate gRNA for particular gene knockout regions*
