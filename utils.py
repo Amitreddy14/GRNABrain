@@ -61,3 +61,17 @@ def prediction_to_sequence(prediction):
         elif nucleotide == 2: seq += 'G'
         elif nucleotide == 3: seq += 'T'
     return seq
+
+def ohe_dna_to_sequence(ohe_dna):
+    seq = ''
+
+    # truncate off epigenomic signals
+    ohe_dna = ohe_dna[:, :4]
+
+    for base in ohe_dna:
+        nucleotide = np.argmax(base)
+        if nucleotide == 0: seq += 'A'
+        elif nucleotide == 1: seq += 'C'
+        elif nucleotide == 2: seq += 'G'
+        elif nucleotide == 3: seq += 'T'
+    return seq
