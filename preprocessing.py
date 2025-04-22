@@ -38,4 +38,22 @@ def fetch_epigenomic_signals(chromosome, start, end, a=0):
     dnase_file = pyBigWig.open(DNASE_PATH)
     ctcf_file = pyBigWig.open(CTCF_PATH)
     
-    # print(chromosome, start - a, end  + a + 1)           
+    # print(chromosome, start - a, end  + a + 1)
+
+    def set_signal(index, entries):
+        if not entries:
+            return
+        for e in entries:
+            read_start = e[0]
+            read_end = e[1]
+            string_vals = e[2].split('\t')
+            val = 0 
+            if string_vals[0].isnumeric():
+                if float(string_vals[0]) > 0: val = 1
+                else: val = 0 
+                # val = float(string_vals[0]) / 1000
+            else:
+                if float(string_vals[1]) > 0: val = 1
+                else: val = 0 
+                # val = float(string_vals[1]) / 1000
+            signals[read_start-start:read_end-start, index] = val       
