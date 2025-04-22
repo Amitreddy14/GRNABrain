@@ -24,3 +24,10 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
         except:
             skip.append(n)
             continue
+
+    pred_Yi = gan.generator(X_gen)
+    pred = np.argmax(pred_Yi, axis=2)
+    real = np.argmax(rnas, axis=2)
+    real_Yi = gan.get_real_Yi(pred_Yi, pred, real)
+    axis_index = 0
+    cumulative_percent_diff = []    
