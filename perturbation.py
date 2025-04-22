@@ -42,3 +42,11 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
         view_length=view_length,
         plot=False,
         num_seqs=num_seqs)
+    
+    heatmap = np.zeros((len(rnas), a * 2 - view_length))
+    
+    for n, (rna, chromosome, start, end) in enumerate(zip(rnas, chromosomes, starts, ends)):
+        if n >= num_seqs + skipped: continue
+        if n in skip:
+            skipped += 1
+            continue
