@@ -220,3 +220,13 @@ EFFICACY_PATHS= {
 }
 EFFICACY_MAP = {}
 gRNA = []
+
+# Not using cell type right now
+def populate_efficacy_map():
+    read_genome()
+    debug_print(['populating efficacy map'])
+    for cell_type in EFFICACY_PATHS:
+        sgRNA_map = {}
+        path = EFFICACY_PATHS[cell_type]
+        with open(path, 'r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
