@@ -123,5 +123,17 @@ for base in ['a', 'g', 'c', 't']:
             a=50
         )[0]
         diffs.append(diff)
+x = np.arange(0,4)
+diffs = np.array(diffs).T
+plt.imshow(diffs, cmap='inferno', origin='lower', aspect='auto', extent=(0, 4, 0, 20))
+plt.colorbar(label='Percent Difference')
+plt.xlabel('Replacement Base')
+plt.ylabel(f'gRNA Perturbation Index')
+plt.yticks(np.arange(0, 20))
+plt.xticks(x,['a', 'g', 'c', 't'])
+plt.grid(axis='y', linestyle='solid', alpha=0.7)
+plt.title(f'Percent Difference in Activity at Target for Replacement Bases')
+plt.show()
+
 
 
