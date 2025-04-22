@@ -147,3 +147,10 @@ def get_train_test(df, length=1e4):
     exclude = set(['0X', '0Y', '0M'])
     bases = set(['a', 'c', 'g', 't'])
     debug_print(['locating corresponding genome sequences'])
+
+    for index, row in tqdm(df.iterrows()):
+        if len(grna_list) >= length: break
+        chromosome = row.iloc[3][3:].zfill(2)
+        if chromosome in exclude: continue
+        if row.iloc[0][0] == 'N': continue
+        start, end = row.iloc[4], row.iloc[5]
