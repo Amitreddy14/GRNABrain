@@ -71,4 +71,17 @@ def fetch_epigenomic_signals(chromosome, start, end, a=0):
     dnase_file.close()
     ctcf_file.close()
     
-    return signals         
+    return signals       
+
+def filter_bases_lists(bases1, bases2):
+    debug_print(['filtering base sequences'])
+    filter_bases1 = []
+    filter_bases2 = []
+    for base1, base2 in zip(bases1, bases2):
+        set1 = set(list(base1.lower()))
+        set2 = set(list(base2.lower()))
+        if 'n' not in set1 and 'n' not in set2:
+            filter_bases1.append(base1)
+            filter_bases2.append(base2)
+
+    return filter_bases1, filter_bases2  
