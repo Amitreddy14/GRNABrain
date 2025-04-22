@@ -230,3 +230,12 @@ def populate_efficacy_map():
         path = EFFICACY_PATHS[cell_type]
         with open(path, 'r') as csv_file:
             csv_reader = csv.DictReader(csv_file)
+
+            for row in csv_reader:
+                chromosome = row['Chromosome'][3:]
+                start = int(row['Start'])
+                end = int(row['End'])
+                sgRNA = ''
+                efficacy = 0
+                if cell_type == 'offtar_off':
+                    target_id = row['Target ID']
