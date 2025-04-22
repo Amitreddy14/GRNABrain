@@ -172,3 +172,13 @@ def get_train_test(df, length=1e4):
         except:
             # print(f'chromosome {chromosome} not found in the genome file.')
             pass
+    seqs = np.array(seqs_list)
+    grna = np.array(grna_list)
+    # grna = ohe_bases(grna_list)
+    # seqs = ohe_bases(seqs_list)
+    debug_print([
+        'data shape:', 
+        '\n                  DNA:  ', seqs.shape, 
+        '\n                  gRNA: ', grna.shape])
+
+    return seqs, grna
