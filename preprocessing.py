@@ -166,3 +166,9 @@ def get_train_test(df, length=1e4):
                 if not epigenomic_signals.shape == (23, 4): continue
                 epigenomic_seq = np.concatenate([ohe_seq, epigenomic_signals], axis=1)
                 if np.isnan(epigenomic_seq).any(): continue
+                ohe_rna = np.concatenate([ohe_base(base) for base in rna], axis=0)
+                seqs_list.append(epigenomic_seq)
+                grna_list.append(ohe_rna)
+        except:
+            # print(f'chromosome {chromosome} not found in the genome file.')
+            pass
