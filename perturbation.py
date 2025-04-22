@@ -62,4 +62,12 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
             perturbed_index = np.argmax(perturbed_grna[i])
             perturbed_grna[base_index], perturbed_grna[perturbed_index] = perturbed_grna[perturbed_index], perturbed_grna[base_index]
 
-            
+            perturbed_activity_scores = []
+            for j in range(end - start - view_length):
+                if gan.discriminator.name == 'conv_discriminator':
+                    activity_score = gan.discriminator([
+                        np.expand_dims(X[n][j:j+view_length], axis=0), 
+                        np.expand_dims(perturbed_grna, axis=0)
+                    ])
+
+
