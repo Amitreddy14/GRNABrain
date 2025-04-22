@@ -31,3 +31,14 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
     real_Yi = gan.get_real_Yi(pred_Yi, pred, real)
     axis_index = 0
     cumulative_percent_diff = []    
+
+    original = activity_test(
+        gan=gan,
+        rnas=rnas,
+        chromosomes=chromosomes,
+        starts=starts,
+        ends=ends,
+        a=a,
+        view_length=view_length,
+        plot=False,
+        num_seqs=num_seqs)
