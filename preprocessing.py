@@ -111,3 +111,15 @@ def load_data(seqs_path='data/seqs.npy', grna_path='data/grna.npy'):
         '\n                  DNA:  ', seqs.shape, 
         '\n                  gRNA: ', grna.shape])
     return seqs, grna
+
+def get_activity_tests(df, num_seqs, read=True):
+    if (read): read_genome()
+    
+    rnas = []
+    chromosomes = []
+    starts = []
+    ends = []
+    
+    exclude = set(['0X', '0Y', '0M'])
+    bases = set(['a', 'c', 'g', 't'])
+    shuffled_df = df.sample(frac=1).reset_index(drop=True)
