@@ -19,3 +19,8 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
             if np.isnan(epigenomic_seq).any():
                 skip.append(n)
                 continue
+            X[n] = epigenomic_seq
+            X_gen[n] = epigenomic_seq[a:a + view_length]
+        except:
+            skip.append(n)
+            continue
