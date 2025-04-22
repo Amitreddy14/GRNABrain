@@ -64,4 +64,11 @@ def fetch_epigenomic_signals(chromosome, start, end, a=0):
     dnase_vals = np.array(dnase_file.values(chromosome, start - a, end + a + 1))
     signals[:, 2] = dnase_vals if not dnase_vals.any() == None else signals[:, 2]
     ctcf_vals = np.array(ctcf_file.values(chromosome, start - a, end + a + 1))
-    signals[:, 2] = ctcf_vals if not ctcf_vals.any() == None else signals[:, 2]             
+    signals[:, 2] = ctcf_vals if not ctcf_vals.any() == None else signals[:, 2]    
+
+    h3k4me_file.close()
+    rrbs_file.close()
+    dnase_file.close()
+    ctcf_file.close()
+    
+    return signals         
