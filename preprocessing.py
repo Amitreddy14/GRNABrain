@@ -270,3 +270,6 @@ def get_random_efficacy(targ_GRNA, chromosome, start, end):
         key = (random.choice(gRNA), chromosome, start, end)
         count +=1
     return key[0]
+
+if __name__ == '__main__':
+    os.system('clear')
