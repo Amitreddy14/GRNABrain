@@ -85,3 +85,14 @@ def filter_bases_lists(bases1, bases2):
             filter_bases2.append(base2)
 
     return filter_bases1, filter_bases2  
+
+def batch_data(data, batch_size):
+    debug_print(['batching data'])
+    output_length = data.shape[0] // batch_size
+    batched_data = np.zeros((output_length, batch_size, data.shape[1], data.shape[2]))
+    for index in range(output_length * batch_size):
+        i = index // batch_size
+        j = index % batch_size
+        batched_data[i][j] = data[index]
+
+    return batched_data
