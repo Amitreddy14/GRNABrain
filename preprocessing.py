@@ -129,3 +129,12 @@ def get_activity_tests(df, num_seqs, read=True):
         if chromosome in exclude: continue
         if row.iloc[0][0] == 'N': continue
         start, end = row.iloc[4], row.iloc[5]
+        fetch_genomic_sequence(chromosome, start, end).lower()
+        rna = row.iloc[0].lower()
+            
+        rnas.append(np.concatenate([ohe_base(base) for base in rna], axis=0))
+        chromosomes.append(chromosome)
+        starts.append(start)
+        ends.append(end)
+    
+    return np.array(rnas), chromosomes, starts, ends
