@@ -154,3 +154,9 @@ def get_train_test(df, length=1e4):
         if chromosome in exclude: continue
         if row.iloc[0][0] == 'N': continue
         start, end = row.iloc[4], row.iloc[5]
+
+        try:
+            seq = fetch_genomic_sequence(chromosome, start, end).lower()
+            rna = row.iloc[0].lower()
+            if set(list(seq)).union(bases) == set(list(seq)) and \
+               set(list(rna)).union(bases) == set(list(rna)):
