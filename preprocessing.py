@@ -239,3 +239,13 @@ def populate_efficacy_map():
                 efficacy = 0
                 if cell_type == 'offtar_off':
                     target_id = row['Target ID']
+
+                    # Get the row from offtar_on whose 'Target ID' matches target_id
+                    with open('data/offtar_on.csv', 'r') as offtar_on:
+                        matching_row = next((r for r in csv.DictReader(offtar_on) if r['Target ID'] == target_id), None)
+                        if matching_row:
+                            sgRNA = matching_row['Target sgRNA']
+                    efficacy = float(row['Cleavage Frequency'])
+                else:
+                    sgRNA = row['sgRNA']
+                    efficacy = float(row['Normalized efficacy'])
