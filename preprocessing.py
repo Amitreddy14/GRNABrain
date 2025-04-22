@@ -262,3 +262,11 @@ def populate_efficacy_map():
 def get_efficacy(sgRNA, chromosome, start, end):
     key_tuple = (sgRNA, chromosome, start, end)
     return EFFICACY_MAP[key_tuple]
+
+def get_random_efficacy(targ_GRNA, chromosome, start, end):
+    key = (random.choice(gRNA), chromosome, start, end)
+    count = 0
+    while key not in EFFICACY_MAP or key[0] == targ_GRNA:
+        key = (random.choice(gRNA), chromosome, start, end)
+        count +=1
+    return key[0]
