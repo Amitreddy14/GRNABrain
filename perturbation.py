@@ -110,6 +110,18 @@ activity_test(
         a=50,
         num_seqs=2)
     
-    diffs = []
+diffs = []
+for base in ['a', 'g', 'c', 't']:
+        diff = perturbation_analysis(
+            gan=gan,
+            rnas=rnas,
+            chromosomes=chromosomes,
+            starts=starts,
+            ends=ends,
+            base=base,
+            num_seqs=1,
+            a=50
+        )[0]
+        diffs.append(diff)
 
 
