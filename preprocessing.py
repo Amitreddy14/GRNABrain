@@ -138,3 +138,12 @@ def get_activity_tests(df, num_seqs, read=True):
         ends.append(end)
     
     return np.array(rnas), chromosomes, starts, ends
+
+def get_train_test(df, length=1e4):
+    read_genome()
+
+    grna_list = []
+    seqs_list = []
+    exclude = set(['0X', '0Y', '0M'])
+    bases = set(['a', 'c', 'g', 't'])
+    debug_print(['locating corresponding genome sequences'])
