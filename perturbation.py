@@ -6,3 +6,9 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
     
     skipped = 0
     skip = []
+
+    X_gen = np.zeros((len(rnas), view_length, 8))
+    X = np.zeros((len(rnas), view_length + 2 * a, 8))
+    for n in range(num_seqs):
+
+        
