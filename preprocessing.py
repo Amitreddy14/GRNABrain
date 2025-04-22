@@ -102,3 +102,12 @@ def train_val_test_split(data, train=0.7, val=0.2, test=0.1):
     return data[:int(train*length)], \
            data[int(train*length):int((train + val)*length)], \
            data[int((train + val)*length):int((train + val + test)*length)]
+
+def load_data(seqs_path='data/seqs.npy', grna_path='data/grna.npy'):
+    debug_print(['loading preprocessed data'])
+    seqs, grna = np.load(seqs_path), np.load(grna_path)
+    debug_print([
+        'data shape:', 
+        '\n                  DNA:  ', seqs.shape, 
+        '\n                  gRNA: ', grna.shape])
+    return seqs, grna
