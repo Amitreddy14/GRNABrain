@@ -195,4 +195,11 @@ def get_discriminator_train_test(seqs, grna):
             synthetic_grna[i][a], synthetic_grna[i][b] = synthetic_grna[i][b], synthetic_grna[i][a]
 
     seqs = np.concatenate([seqs, seqs])
-    grna = np.concatenate([grna, synthetic_grna])        
+    grna = np.concatenate([grna, synthetic_grna])   
+
+    indices = np.random.permutation(length * 2)
+    X = [seqs[indices], grna[indices]]
+    Y = np.array([1 for _ in range(length)] + [0 for _ in range(length)])
+    Y = Y[indices]
+    
+    return X, Y     
