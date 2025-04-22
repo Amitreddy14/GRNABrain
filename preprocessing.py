@@ -252,5 +252,9 @@ def populate_efficacy_map():
 
                 if (chromosome == 'X' or chromosome == 'Y'): continue
                 if (len(chromosome) == 1): chromosome = '0' + chromosome 
-                
-                   
+
+                gRNA.append(sgRNA)
+                key_tuple = (sgRNA, chromosome, start, end)
+                sgRNA_map[key_tuple] = efficacy
+                EFFICACY_MAP[key_tuple] = efficacy
+    return EFFICACY_MAP   
