@@ -55,3 +55,11 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
         end += a
         percent_diff = []
         heatmap = np.zeros((len(rna), a * 2 - view_length))
+
+        for i in range(len(rna)):
+            perturbed_grna = real_Yi[n]
+            base_index = np.argmax(preprocessing.ohe_base(base))
+            perturbed_index = np.argmax(perturbed_grna[i])
+            perturbed_grna[base_index], perturbed_grna[perturbed_index] = perturbed_grna[perturbed_index], perturbed_grna[base_index]
+
+            
