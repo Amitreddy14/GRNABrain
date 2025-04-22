@@ -69,5 +69,10 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
                         np.expand_dims(X[n][j:j+view_length], axis=0), 
                         np.expand_dims(perturbed_grna, axis=0)
                     ])
+                    perturbed_activity_scores.append(activity_score.numpy()[0][0])
+            heatmap[i] = np.array(perturbed_activity_scores)[view_length - 1:]
+            percent_diff.append(((heatmap[i][a-view_length+1] - original[n][a])/original[n][a])*100)
+        cumulative_percent_diff.append(percent_diff)
+        axis_index += 1 
 
 
