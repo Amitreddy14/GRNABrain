@@ -74,5 +74,17 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
             percent_diff.append(((heatmap[i][a-view_length+1] - original[n][a])/original[n][a])*100)
         cumulative_percent_diff.append(percent_diff)
         axis_index += 1 
+        
+        plt.figure(figsize=(20, 7))
+        plt.subplot(1, 2, 1)
+        x = np.arange(start + 23, end - 23 + 1)
+        plt.imshow(heatmap, cmap='inferno', origin='lower', aspect='auto', extent=(min(x), max(x), 0, len(rna)))
+        plt.colorbar(label='Activity Score')
+        plt.xlabel('DNA Position')
+        plt.ylabel(f'gRNA Perturbation Index')
+        plt.yticks(np.arange(0, len(rna)))
+        plt.grid(axis='y', linestyle='solid', alpha=0.7)
+        str_rna = preprocessing.str_bases(rna)
+        plt.title(f'Heatmap')
 
 
