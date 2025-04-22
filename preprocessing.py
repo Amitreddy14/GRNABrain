@@ -56,4 +56,12 @@ def fetch_epigenomic_signals(chromosome, start, end, a=0):
                 if float(string_vals[1]) > 0: val = 1
                 else: val = 0 
                 # val = float(string_vals[1]) / 1000
-            signals[read_start-start:read_end-start, index] = val       
+            signals[read_start-start:read_end-start, index] = val  
+
+    h3k4me_vals = np.array(h3k4me_file.values(chromosome, start - a, end + a + 1))
+    signals[:, 2] = h3k4me_vals if not h3k4me_vals.any() == None else signals[:, 2]
+    set_signal(1, rrbs_file.entries(chromosome, start - a, end + a + 1))
+    dnase_vals = np.array(dnase_file.values(chromosome, start - a, end + a + 1))
+    signals[:, 2] = dnase_vals if not dnase_vals.any() == None else signals[:, 2]
+    ctcf_vals = np.array(ctcf_file.values(chromosome, start - a, end + a + 1))
+    signals[:, 2] = ctcf_vals if not ctcf_vals.any() == None else signals[:, 2]             
