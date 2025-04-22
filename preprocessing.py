@@ -186,3 +186,10 @@ def get_train_test(df, length=1e4):
 def get_discriminator_train_test(seqs, grna):
     debug_print(['generating synthetic data'])
     length = seqs.shape[0]
+    
+    synthetic_grna = copy.deepcopy(grna)
+    for i in range(synthetic_grna.shape[0]):
+        for j in range(3):
+            a = np.random.randint(0, 20)
+            b = np.random.randint(0, 20)
+            synthetic_grna[i][a], synthetic_grna[i][b] = synthetic_grna[i][b], synthetic_grna[i][a]
