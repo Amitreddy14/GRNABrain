@@ -96,3 +96,9 @@ def batch_data(data, batch_size):
         batched_data[i][j] = data[index]
 
     return batched_data
+
+def train_val_test_split(data, train=0.7, val=0.2, test=0.1):
+    length = len(data)
+    return data[:int(train*length)], \
+           data[int(train*length):int((train + val)*length)], \
+           data[int((train + val)*length):int((train + val + test)*length)]
