@@ -249,3 +249,8 @@ def populate_efficacy_map():
                 else:
                     sgRNA = row['sgRNA']
                     efficacy = float(row['Normalized efficacy'])
+
+                if (chromosome == 'X' or chromosome == 'Y'): continue
+                if (len(chromosome) == 1): chromosome = '0' + chromosome 
+                
+                   
