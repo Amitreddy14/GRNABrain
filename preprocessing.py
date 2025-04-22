@@ -123,3 +123,9 @@ def get_activity_tests(df, num_seqs, read=True):
     exclude = set(['0X', '0Y', '0M'])
     bases = set(['a', 'c', 'g', 't'])
     shuffled_df = df.sample(frac=1).reset_index(drop=True)
+    for index, row in tqdm(shuffled_df.iterrows()):
+        if len(rnas) >= num_seqs: break
+        chromosome = row.iloc[3][3:].zfill(2)
+        if chromosome in exclude: continue
+        if row.iloc[0][0] == 'N': continue
+        start, end = row.iloc[4], row.iloc[5]
