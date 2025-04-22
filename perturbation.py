@@ -101,4 +101,15 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
     
     return cumulative_percent_diff
 
+activity_test(
+        gan=gan,
+        rnas=rnas,
+        chromosomes=chromosomes,
+        starts=starts,
+        ends=ends,
+        a=50,
+        num_seqs=2)
+    
+    diffs = []
+
 
