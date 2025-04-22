@@ -50,3 +50,8 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
         if n in skip:
             skipped += 1
             continue
+
+        start -= a
+        end += a
+        percent_diff = []
+        heatmap = np.zeros((len(rna), a * 2 - view_length))
