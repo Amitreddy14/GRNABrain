@@ -209,3 +209,14 @@ def extract_data(path=GRNA_PATH):
     df = pd.read_csv(path)
     shuffled_df = df.sample(frac=1).reset_index(drop=True)
     return shuffled_df
+
+# Efficacies
+EFFICACY_PATHS= {
+    # 'hct':'data/ontar/hct116.csv',
+    # 'hek':'data/ontar/hek293t.csv',
+    # 'hela':'data/ontar/hela.csv',
+    # 'hl60':'data/ontar/hl60.csv',
+    'offtar_off':'data/offtar_off.csv',
+}
+EFFICACY_MAP = {}
+gRNA = []
