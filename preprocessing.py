@@ -203,3 +203,9 @@ def get_discriminator_train_test(seqs, grna):
     Y = Y[indices]
     
     return X, Y     
+
+def extract_data(path=GRNA_PATH):
+    debug_print(['loading gRNA data from', path])
+    df = pd.read_csv(path)
+    shuffled_df = df.sample(frac=1).reset_index(drop=True)
+    return shuffled_df
