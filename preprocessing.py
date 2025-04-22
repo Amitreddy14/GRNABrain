@@ -182,3 +182,7 @@ def get_train_test(df, length=1e4):
         '\n                  gRNA: ', grna.shape])
 
     return seqs, grna
+
+def get_discriminator_train_test(seqs, grna):
+    debug_print(['generating synthetic data'])
+    length = seqs.shape[0]
