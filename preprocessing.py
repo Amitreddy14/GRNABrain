@@ -160,3 +160,9 @@ def get_train_test(df, length=1e4):
             rna = row.iloc[0].lower()
             if set(list(seq)).union(bases) == set(list(seq)) and \
                set(list(rna)).union(bases) == set(list(rna)):
+                
+                ohe_seq = np.concatenate([ohe_base(base) for base in seq], axis=0)
+                epigenomic_signals = fetch_epigenomic_signals(chromosome, start, end)
+                if not epigenomic_signals.shape == (23, 4): continue
+                epigenomic_seq = np.concatenate([ohe_seq, epigenomic_signals], axis=1)
+                if np.isnan(epigenomic_seq).any(): continue
