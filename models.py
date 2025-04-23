@@ -270,5 +270,22 @@ class CriticTransformer1(tf.keras.Model):
         return x
 
     def predict(self, x):
-        return self.call(x)     
+        return self.call(x)    
+
+# Baselines
+class GuessBaseline():
+    def __init__(self, Y, name="guess_baseline"):
+        self.shape = Y.shape[1:]
+        self.Y = Y
+        self.name = name
+
+    def call(self, X):
+        Y_pred = np.zeros((X.shape[0],) + self.shape)
+        for i in range(X.shape[0]):
+            Y_pred[i] = self.Y[np.random.randint(0, len(self.Y) - 1)]
+        
+        return Y_pred
+    
+    def predict(self, X):
+        return self.call(X)     
  
