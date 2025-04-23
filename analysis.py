@@ -677,4 +677,50 @@ def validate_against_efficacies(gan, plot = True):
 
     return efficacies
 
+def validation_activity_map(gan, num_seqs=4):
+    preprocessing.populate_efficacy_map()
+
+    rnas = []
+    chromosomes = []
+    starts = []
+    ends = []
+    efficacies = []
+
+    items = preprocessing.EFFICACY_MAP.items()
+    shuffled_items = list(items)
+    np.random.shuffle(shuffled_items)
+    for ((sgRNA, chromosome, start, end), efficacy) in shuffled_items: 
+        if len(rnas) >= num_seqs:
+            break
+        rnas.append(ohe_bases(sgRNA)[:-3])
+        chromosomes.append(chromosome)
+        starts.append(start)
+        ends.append(end)
+        efficacies.append(efficacy)
+    
+    rnas = np.array(rnas).reshape((len(rnas), 20, 4))
+
+    activity_test(gan, rnas, chromosomes, starts, ends, experimental_efficacies=efficacies, num_seqs=num_seqs)
+
+
+if __name__ == '__main__':
+    os.system('clear')
+
+    graph_roc_curves([
+        'models/mlp_gan/roc.csv',
+        'models/conv_gan/roc.csv',
+        'models/trans_gan/roc.csv',
+        'models/trans_conv_gan2/roc.csv',
+        'models/trans_gan4/roc.csv'
+    ])
+
+    graph_metrics([
+       'models/mlp_gan/metrics.csv',
+        'models/conv_gan/metrics.csv',
+        'models/trans_gan/metrics.csv',
+        'models/trans_conv_gan2/metrics.csv',
+        'models/trans_gan4/metrics.csv'
+    ])
+
+
 
