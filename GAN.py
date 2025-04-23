@@ -35,3 +35,14 @@ def generator_loss(pred, real, pred_output, mismatch_output):
     # BC(0, D(G(d_t), d_rand))
     disc_mismatch = tf.keras.losses.BinaryCrossentropy()(tf.zeros_like(pred_output), mismatch_output)
     return gen * lambda1 + disc * lambda2 + disc_mismatch * lambda3
+
+class GAN(tf.keras.Model):
+    def __init__(self, input_shape, output_shape, generator, discriminator, name='gan_parent', **kwargs):
+        super().__init__(name=name, **kwargs)
+        self.shape = input_shape
+        # self.generator = ActorVAE(input_shape, output_shape, latent_dim=12, num_transformers=4, hidden_size=64)
+        self.generator = ActorTransformer1(input_shape, output_shape, num_transformers=8, hidden_size=64)
+        self.generator.build((1,) + input_shape)
+        self.discriminator = discriminator
+        test_data = [np.zeros((1,) + input_shape), np.zeros((1,) + output_shape)]
+        self.discriminator(test_data)
