@@ -234,4 +234,8 @@ def main(load_data=False):
             plot=True)
     '''    
 
+if __name__ == '__main__':
+    os.system('clear')
+    main(True)    
+
 
