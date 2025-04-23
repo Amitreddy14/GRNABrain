@@ -193,4 +193,11 @@ class GAN(tf.keras.Model):
                 gradients_discriminator = disc_tape.gradient(disc_loss, self.discriminator.trainable_variables)
                 discriminator_optimizer.apply_gradients(zip(gradients_discriminator, self.discriminator.trainable_variables))
 
-                
+            if not validation_data == (): gen_real_loss, gen_accuracy = self.generator.evaluate(validation_data[0], validation_data[1], verbose=0)
+            else: gen_real_loss, gen_accuracy = self.generator.evaluate(X[0], Y[0], verbose=0)
+            
+            gen_losses.append(gen_loss.numpy())
+            gen_real_losses.append(gen_real_loss)
+            gen_accuracies.append(gen_accuracy)
+            disc_losses.append(disc_loss.numpy())
+            disc_accuracies.append(disc_accuracy)    
