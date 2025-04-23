@@ -39,3 +39,12 @@ def generate_candidate_grna(gan, rna, chromosome, start, end, a=400, view_length
     candidate_grna = gan.generate(X)
     filtered_candidate_grna = []
     candidate_grna_set = set()
+    for i in range(candidate_grna.shape[0]):
+        grna = preprocessing.str_bases(candidate_grna[i])
+        if grna in candidate_grna_set:
+            continue
+        else:
+            filtered_candidate_grna.append(candidate_grna[i])
+            candidate_grna_set.add(grna)
+    print(candidate_grna_set)
+    filtered_candidate_grna = np.array(filtered_candidate_grna)
