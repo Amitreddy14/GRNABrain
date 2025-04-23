@@ -299,5 +299,17 @@ class CenterBaseline():
         return Y_pred
     
     def predict(self, X):
-        return self.call(X)      
+        return self.call(X)   
+
+class MeanBaseline():
+    def __init__(self, Y, name="mean_baseline"):
+        self.pred = tf.reduce_mean(Y, axis=0)
+        self.name = name
+
+    def call(self, X):
+        Y_pred = np.array([self.pred for _ in range(X.shape[0])])
+        return Y_pred
+    
+    def predict(self, X):
+        return self.call(X)       
  
