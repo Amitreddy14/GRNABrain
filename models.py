@@ -229,5 +229,15 @@ class CriticConv(tf.keras.Model):
         padded_grna = np.pad(grna, pad_width, mode='constant', constant_values=0)
         concat = np.concatenate([padded_grna, seqs], axis=2)
         x = concat[..., np.newaxis]
-        return x       
+        return x   
+
+    def call(self, x):
+        x = self.preprocess_input(*x)
+        x = self.conv1(x)
+        x = self.flatten(x)
+        x = self.dense1(x)
+        x = self.dense2(x)
+        x = self.dense3(x)
+
+        return x    
  
