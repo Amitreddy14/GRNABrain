@@ -113,5 +113,18 @@ class ActorTransformer1(tf.keras.Model):
         self.dense1 = tf.keras.layers.Dense(hidden_size, activation='relu')
         self.dense2 = tf.keras.layers.Dense(output_shape[0] * output_shape[1], activation='relu')
         self.reshape = tf.keras.layers.Reshape(output_shape)
-        self.dense3 = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax'))    
+        self.dense3 = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax'))   
+
+    def call(self, x):
+        x = self.transformers(x)
+        x = self.flatten(x)
+        x = self.dense1(x)
+        x = self.dense2(x)
+        x = self.reshape(x)
+        x = self.dense3(x)
+
+        return x
+
+    def predict(self, x):
+        return self.call(x)     
  
