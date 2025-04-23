@@ -196,4 +196,21 @@ class CriticMLP(tf.keras.Model):
         self.denseSEQS2 = tf.keras.layers.Dense(32, activation='relu', kernel_regularizer=regularizer)
         self.dense1 = tf.keras.layers.Dense(32, activation='relu', kernel_regularizer=regularizer)
         self.dense2 = tf.keras.layers.Dense(1, activation='sigmoid', kernel_regularizer=regularizer) 
+
+    def call(self, x):
+        x_seqs, x_grna = x
+
+        x_grna = self.flatten(x_grna)
+        x_grna = self.denseGRNA1(x_grna)
+        x_grna = self.denseGRNA2(x_grna)
+
+        x_seqs = self.flatten(x_seqs)
+        x_seqs = self.denseSEQS1(x_seqs)
+        x_seqs = self.denseSEQS2(x_seqs)
+
+        x = tf.concat([x_grna, x_seqs], axis=1)
+        x = self.dense1(x)
+        x = self.dense2(x)
+
+        return x    
  
