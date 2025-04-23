@@ -89,4 +89,14 @@ def main(load_data=False):
         seqs, grna = preprocessing.get_train_test(df, 1e4)
         debug_print(['saving preprocessed data'])
         np.save('data/seqs.npy', seqs)
-        np.save('data/grna.npy', grna)        
+        np.save('data/grna.npy', grna)  
+
+    batch_size = 128
+    batched_seqs = preprocessing.batch_data(seqs, batch_size)
+    batched_grna = preprocessing.batch_data(grna, batch_size)
+    
+    batched_seqs_train, batched_seqs_val, batched_seqs_test = preprocessing.train_val_test_split(batched_seqs)
+    batched_grna_train, batched_grna_val, batched_grna_test = preprocessing.train_val_test_split(batched_grna)
+
+    seqs_train, seqs_val, seqs_test = preprocessing.train_val_test_split(seqs)
+    grna_train, grna_val, grna_test = preprocessing.train_val_test_split(grna)          
