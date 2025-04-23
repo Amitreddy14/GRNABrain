@@ -221,5 +221,13 @@ class CriticConv(tf.keras.Model):
         self.flatten = tf.keras.layers.Flatten()
         self.dense1 = tf.keras.layers.Dense(64, activation='relu')
         self.dense2 = tf.keras.layers.Dense(32, activation='relu')
-        self.dense3 = tf.keras.layers.Dense(1, activation='sigmoid')    
+        self.dense3 = tf.keras.layers.Dense(1, activation='sigmoid') 
+
+    def preprocess_input(self, seqs, grna):
+        output_shape = (seqs.shape[0], seqs.shape[1], grna.shape[2])
+        pad_width = [(0, 0), (0, output_shape[1] - grna.shape[1]), (0, 0)]
+        padded_grna = np.pad(grna, pad_width, mode='constant', constant_values=0)
+        concat = np.concatenate([padded_grna, seqs], axis=2)
+        x = concat[..., np.newaxis]
+        return x       
  
