@@ -40,7 +40,7 @@ def train(models, X, Y, epochs, batch_size=64, validation_split=0.2, graph=True,
         plt.xlabel('epoch')
         plt.legend()
         plt.show()    
-        
+
 def train_multiproc(model, X, Y, epochs, batch_size=16, validation_split=0.2):
     # doesn't really work
     strategy = tf.distribute.MultiWorkerMirroredStrategy()
@@ -52,4 +52,17 @@ def train_multiproc(model, X, Y, epochs, batch_size=16, validation_split=0.2):
     mirrored_X = tf.convert_to_tensor(X)
     mirrored_Y = tf.convert_to_tensor(Y)
     mirrored_dataset = tf.data.Dataset.from_tensor_slices((mirrored_X, mirrored_Y)).batch(batch_size)
-    dist_dataset = strategy.experimental_distribute_dataset(mirrored_dataset)     
+    dist_dataset = strategy.experimental_distribute_dataset(mirrored_dataset) 
+
+    def train_step(inputs):
+        X_batch, Y_batch = inputs
+
+        with tf.GradientTape() as tape:
+            predictions = model(X_batch, training=True)
+            loss = tf.reduce_mean(tf.keras.losses.binary_crossentropy(Y_batch, predictions))
+
+        gradients = tape.gradient(loss, model.trainable_variables)
+        optimizer = model.optimizer
+        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+
+        return loss    
