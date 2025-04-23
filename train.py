@@ -23,3 +23,20 @@ def train(models, X, Y, epochs, batch_size=64, validation_split=0.2, graph=True,
         model(X)
         if summary: model.summary()
         model.fit(X, Y, batch_size=batch_size, epochs=epochs, validation_split=validation_split)        
+
+    if graph:
+        for model in models:
+            val_loss = model.history.history['val_loss']
+            plt.plot(val_loss, label=model.name + ' validation loss')
+        plt.ylabel('categorical crossentropy loss')
+        plt.xlabel('epoch')
+        plt.legend()
+        plt.show()
+        
+        for model in models:
+            accuracy = model.history.history['accuracy']
+            plt.plot(accuracy, label=model.name + ' accuracy')
+        plt.ylabel('categorical crossentropy loss')
+        plt.xlabel('epoch')
+        plt.legend()
+        plt.show()    
