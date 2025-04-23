@@ -157,5 +157,81 @@ def main(load_data=False):
         )
         diff = np.array(diff).mean(axis=0)
         diffs.append(diff)
+    x = np.arange(0,4)
+    diffs = np.array(diffs).T
+    plt.imshow(diffs, cmap='Blues', origin='lower', aspect='auto', extent=(0, 4, 0, 20))
+    plt.colorbar(label='Percent Difference')
+    plt.xlabel('Replacement Base')
+    plt.ylabel(f'gRNA Perturbation Index')
+    plt.yticks(np.arange(0, 20))
+    plt.xticks(x,['a', 'g', 'c', 't'])
+    plt.grid(axis='y', linestyle='solid', alpha=0.7)
+    plt.title(f'Percent Difference in Activity at Target for Replacement Bases')
+    plt.show()
+
+    activity_scores_avg = activity_test(
+        gan=gan,
+        rnas=rnas,
+        chromosomes=chromosomes,
+        starts=starts,
+        ends=ends,
+        a=500,
+        num_seqs=256,
+        plot=False)
+    
+    plt.figure(figsize=(8, 4))
+    plt.plot(activity_scores_avg)
+    plt.ylabel('average predicted activity')
+    plt.xlabel('genomic position')
+    plt.axvline(x=500, color='orange', linestyle='dotted', label='bind site')
+    plt.show()
+    
+    best_five = candidate_grna_range(gan, 
+                                     chromosome=chromosomes[0], 
+                                     start=starts[0], 
+                                     end=ends[0], 
+                                     a=250,
+                                     num_seqs=5)
+    deviation_from_complement_dna(gan.generator, seqs_test)
+
+    perturbation_map(
+        gan=gan,
+        rnas=rnas,
+        chromosomes=chromosomes,
+        starts=starts,
+        ends=ends,
+        view_length=23,
+        num_seqs=4
+    )
+    
+    complement_activity_test(
+        gan=gan,
+        chromosome=chromosomes[0],
+        start=starts[0],
+        end=ends[0],
+        a=50)
+    
+    for base in ['a', 'g', 'c', 't']:
+        perturbation_analysis(
+            gan=gan,
+            rnas=rnas,
+            chromosomes=chromosomes,
+            starts=starts,
+            ends=ends,
+            base=base,
+            num_seqs=4,
+            a=50
+        )
+    for i in range(len(rnas)):
+        generate_candidate_grna(
+            gan=gan, 
+            rna=rnas[i],
+            chromosome=chromosomes[i], 
+            start=starts[i], 
+            end=ends[i], 
+            a=50,
+            num_seqs=6,
+            plot=True)
+    '''    
 
 
