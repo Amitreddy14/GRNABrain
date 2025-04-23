@@ -103,4 +103,15 @@ class ActorVAE(tf.keras.Model):
 
     def predict(self, x):
         return self.call(x)
+    
+class ActorTransformer1(tf.keras.Model):
+    def __init__(self, input_shape, output_shape, num_transformers=3, hidden_size=32, name='actor_transformer_1'):
+        super().__init__(name=name)
+
+        self.transformers = tf.keras.Sequential([Transformer(8, 8, hidden_size) for _ in range(num_transformers)])
+        self.flatten = tf.keras.layers.Flatten()
+        self.dense1 = tf.keras.layers.Dense(hidden_size, activation='relu')
+        self.dense2 = tf.keras.layers.Dense(output_shape[0] * output_shape[1], activation='relu')
+        self.reshape = tf.keras.layers.Reshape(output_shape)
+        self.dense3 = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax'))    
  
