@@ -33,4 +33,16 @@ class Transformer(tf.keras.layers.Layer):
 
         ffn_output = self.ffn(out1)
         ffn_output = self.dropout2(ffn_output, training=training)
-        return self.layernorm2(out1 + ffn_output)    
+        return self.layernorm2(out1 + ffn_output)   
+
+    # Generators
+class ActorMLP(tf.keras.Model):
+    def __init__(self, output_shape, name='test_generator', **kwargs):
+        super().__init__(name=name, **kwargs)
+        self.flatten = tf.keras.layers.Flatten()
+        self.dense1 = tf.keras.layers.Dense(64, activation='relu')
+        self.dense2 = tf.keras.layers.Dense(32, activation='relu')
+        self.dense3 = tf.keras.layers.Dense(output_shape[0] * 4, activation='relu')
+        self.reshape = tf.keras.layers.Reshape((output_shape[0], 4))
+        self.out = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax'))
+ 
