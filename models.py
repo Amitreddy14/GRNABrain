@@ -152,5 +152,13 @@ class ActorConvDeconv(tf.keras.Model):
 
             tf.keras.layers.Reshape(output_shape),
             tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax', use_bias=False))
-        ])       
+        ])    
+
+    def call(self, X):
+        latent = self.Encoder(X)
+        output = self.Decoder(latent)
+        return output
+
+    def predict(self, X):
+        return self.call(X)       
  
