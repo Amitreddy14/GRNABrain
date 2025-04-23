@@ -99,4 +99,20 @@ def main(load_data=False):
     batched_grna_train, batched_grna_val, batched_grna_test = preprocessing.train_val_test_split(batched_grna)
 
     seqs_train, seqs_val, seqs_test = preprocessing.train_val_test_split(seqs)
-    grna_train, grna_val, grna_test = preprocessing.train_val_test_split(grna)          
+    grna_train, grna_val, grna_test = preprocessing.train_val_test_split(grna)
+
+    ## Baselines
+    compute_baselines([
+        GuessBaseline(grna),
+        MeanBaseline(grna),
+        CenterBaseline(grna),
+        PairBaseline()], seqs, grna)
+
+    ## Models
+    # Change GAN below. GANS can be found in GAN.py. Models can be found in models.py.
+    gan = Trans_GAN4(seqs.shape[1:], grna.shape[1:])
+
+    train([gan.generator], seqs, grna, epochs=0, graph=False, summary=False)
+    train([gan.discriminator], [seqs, grna], np.ones(len(seqs)), epochs=0, graph=False, summary=False)          
+
+    
