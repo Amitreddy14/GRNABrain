@@ -25,3 +25,12 @@ class Transformer(tf.keras.layers.Layer):
         self.dropout2 = tf.keras.layers.Dropout(rate=self.dropout_rate)
         self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
         self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-6)    
+
+    def call(self, inputs, training=True):
+        attn_output = self.attention(query=inputs, value=inputs, attention_mask=None, training=training)
+        attn_output = self.dropout1(attn_output, training=training)
+        out1 = self.layernorm1(inputs + attn_output)
+
+        ffn_output = self.ffn(out1)
+        ffn_output = self.dropout2(ffn_output, training=training)
+        return self.layernorm2(out1 + ffn_output)    
