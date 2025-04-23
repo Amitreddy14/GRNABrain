@@ -46,3 +46,18 @@ class GAN(tf.keras.Model):
         self.discriminator = discriminator
         test_data = [np.zeros((1,) + input_shape), np.zeros((1,) + output_shape)]
         self.discriminator(test_data)
+
+    def save_model(self, gen_losses, disc_losses, gen_real_losses, gen_accuracies, disc_accuracies):
+        debug_print(['saving GAN'])
+        os.makedirs(f'models/{self.name}', exist_ok=True)
+        self.generator.save_weights(f'models/{self.name}/generator.weights.h5')
+        self.discriminator.save_weights(f'models/{self.name}/discriminator.weights.h5')
+
+        df = pd.DataFrame({
+            'gen_losses': gen_losses,
+            'disc_losses': disc_losses,
+            'gen_real_losses': gen_real_losses,
+            'gen_accuracies': gen_accuracies,
+            'disc_accuracies': disc_accuracies
+        })
+        df.to_csv(f'models/{self.name}/metrics.csv', index=False)    
