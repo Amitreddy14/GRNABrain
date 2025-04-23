@@ -98,4 +98,18 @@ class GAN(tf.keras.Model):
             for n in range(real_Yi.shape[1]):
                 real_Yi[m][n][pred[m][n]], real_Yi[m][n][real[m][n]] = real_Yi[m][n][real[m][n]], real_Yi[m][n][pred[m][n]]
                 
-        return real_Yi        
+        return real_Yi  
+
+    def train(self, 
+              X, Y, 
+              epochs, 
+              validation_data=(), 
+              batch_size=8, 
+              learning_rate=0.001, 
+              print_interval=1, 
+              summary=True, plot=True,
+              save=True, load=False):
+        
+        if load:
+            self.load_model()
+            return      
