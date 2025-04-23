@@ -137,3 +137,10 @@ class GAN(tf.keras.Model):
         disc_accuracies = []
         
         confidence = 0  
+        for epoch in range(1, epochs + 1):
+            example_probs = None
+            example_labels = None
+
+            gen_loss = None
+            disc_loss = None
+            disc_accuracy = 0
