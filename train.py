@@ -115,4 +115,19 @@ def main(load_data=False):
     train([gan.generator], seqs, grna, epochs=0, graph=False, summary=False)
     train([gan.discriminator], [seqs, grna], np.ones(len(seqs)), epochs=0, graph=False, summary=False)          
 
+    ## Training
+    gan.train(batched_seqs_train, 
+              batched_grna_train, 
+              epochs=3, 
+              validation_data=(seqs_val, grna_val), 
+              print_interval=1, summary=True, plot=False,
+              save=False, load=True)
+
+    # save_roc(seqs_test, grna_test, gan.generator, file=f'models/{gan.name}/roc.csv')
+        
+    ## Analysis
+    rnas, chromosomes, starts, ends = preprocessing.get_activity_tests(df, 512, load_data)
+
+    validation_activity_map(gan, num_seqs=10)
+
     
