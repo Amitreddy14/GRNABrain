@@ -228,3 +228,10 @@ class MLPGAN(GAN):
                          ActorMLP(output_shape), 
                          CriticMLP(), 
                          name=name, **kwargs)
+        
+class Conv_GAN(GAN):
+    def __init__(self, input_shape, output_shape, name='conv_gan', **kwargs):
+        super().__init__(input_shape, output_shape, 
+                         ActorConvDeconv(input_shape, output_shape), 
+                         CriticConv(), 
+                         name=name, **kwargs)        
