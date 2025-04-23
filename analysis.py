@@ -405,4 +405,92 @@ def save_roc(x, y_true, model, file = 'models/roc.csv'):
         'tpr': mean_tpr,
         'auc': mean_auc
     })
-    df.to_csv(file, index=False)        
+    df.to_csv(file, index=False)   
+
+def graph_roc_curves(files):
+    sns.set_theme(style="darkgrid")
+    for file in files:
+        df = pd.read_csv(file)
+        # file is of form 'models/mlp_gan/roc.csv'
+        model_name = file.split('/')[1]
+        plt.plot(df['fpr'], df['tpr'], label=f'{model_name} (AUC = {df["auc"][0]:.4f})', lw=2, alpha=1)
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('ROC')
+    plt.legend(loc="lower right")
+    plt.show()
+
+def graph_metrics(files):
+    sns.set_theme(style="darkgrid")
+
+    # Gen loss
+    for file in files:
+        df = pd.read_csv(file)
+        # file is of form 'models/mlp_gan/roc.csv'
+        model_name = file.split('/')[1]
+        plt.plot(df['gen_losses'], label=f'{model_name}', lw=2, alpha=1)
+    plt.xlabel('Epoch')
+    plt.ylabel('Generator Loss')
+    plt.title('Generator Loss')
+    plt.legend(loc="lower right")
+    plt.show()
+
+    # Disc loss
+    for file in files:
+        df = pd.read_csv(file)
+        # file is of form 'models/mlp_gan/roc.csv'
+        model_name = file.split('/')[1]
+        plt.plot(df['disc_losses'], label=f'{model_name}', lw=2, alpha=1)
+    plt.xlabel('Epoch')
+    plt.ylabel('Discriminator Loss')
+    plt.title('Discriminator Loss')
+    plt.legend(loc="lower right")
+    plt.show()
+
+    # Total loss
+    for file in files:
+        df = pd.read_csv(file)
+        # file is of form 'models/mlp_gan/roc.csv'
+        model_name = file.split('/')[1]
+        plt.plot(df['gen_losses'] + df['disc_losses'], label=f'{model_name}', lw=2, alpha=1)
+    plt.xlabel('Epoch')
+    plt.ylabel('Total Loss')
+    plt.title('Total Loss')
+    plt.legend(loc="lower right")
+    plt.show()
+
+    # Gen real loss
+    for file in files:
+        df = pd.read_csv(file)
+        # file is of form 'models/mlp_gan/roc.csv'
+        model_name = file.split('/')[1]
+        plt.plot(df['gen_real_losses'], label=f'{model_name}', lw=2, alpha=1)
+    plt.xlabel('Epoch')
+    plt.ylabel('Generator Real Loss')
+    plt.title('Generator Real Loss')
+    plt.legend(loc="lower right")
+    plt.show()
+
+    # Gen accuracy
+    for file in files:
+        df = pd.read_csv(file)
+        # file is of form 'models/mlp_gan/roc.csv'
+        model_name = file.split('/')[1]
+        plt.plot(df['gen_accuracies'], label=f'{model_name}', lw=2, alpha=1)
+    plt.xlabel('Epoch')
+    plt.ylabel('Generator Accuracy')
+    plt.title('Generator Accuracy')
+    plt.legend(loc="lower right")
+    plt.show()
+
+    # Disc accuracy
+    for file in files:
+        df = pd.read_csv(file)
+        # file is of form 'models/mlp_gan/roc.csv'
+        model_name = file.split('/')[1]
+        plt.plot(df['disc_accuracies'], label=f'{model_name}', lw=2, alpha=1)
+    plt.xlabel('Epoch')
+    plt.ylabel('Discriminator Accuracy')
+    plt.title('Discriminator Accuracy')
+    plt.legend(loc="lower right")
+    plt.show()         
