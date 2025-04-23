@@ -48,3 +48,10 @@ def generate_candidate_grna(gan, rna, chromosome, start, end, a=400, view_length
             candidate_grna_set.add(grna)
     print(candidate_grna_set)
     filtered_candidate_grna = np.array(filtered_candidate_grna)
+
+     debug_print(['generating candidate grna for', seq, ':'])
+    debug_print(['      [correct grna]', preprocessing.str_bases(rna)])
+    for grna in candidate_grna:
+        debug_print(['     ', preprocessing.str_bases(grna)])
+    
+    activity_test(gan, filtered_candidate_grna, chromosomes, starts, ends, a, view_length, plot, filtered_candidate_grna.shape[0], True)
