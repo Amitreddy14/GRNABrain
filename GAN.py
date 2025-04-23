@@ -83,4 +83,9 @@ class GAN(tf.keras.Model):
         plt.ylabel('accuracy (0-1)')
         plt.xlabel('epoch')
         plt.legend()
-        plt.show()        
+        plt.show() 
+
+    def generate(self, seqs):
+        # introduce noise
+        seqs += tf.random.normal(seqs.shape) * 0.1
+        return self.generator(seqs)           
