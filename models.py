@@ -45,4 +45,14 @@ class ActorMLP(tf.keras.Model):
         self.dense3 = tf.keras.layers.Dense(output_shape[0] * 4, activation='relu')
         self.reshape = tf.keras.layers.Reshape((output_shape[0], 4))
         self.out = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax'))
+
+    def call(self, x):
+        x = self.flatten(x)
+        x = self.dense1(x)
+        x = self.dense2(x)
+        x = self.dense3(x)
+        x = self.reshape(x)
+        x = self.out(x)
+        
+        return x    
  
