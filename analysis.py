@@ -493,4 +493,50 @@ def graph_metrics(files):
     plt.ylabel('Discriminator Accuracy')
     plt.title('Discriminator Accuracy')
     plt.legend(loc="lower right")
-    plt.show()         
+    plt.show() 
+
+def deviation_from_complement_dna(model, dna_sequences):
+    deviations = np.zeros((len(dna_sequences), 20, 4))
+
+    # Ensure X and Y have the same number of sequences
+    for dna_seq, _ in tqdm(dna_sequences, total=len(dna_sequences), desc='Calculating deviations'):
+        prediction = model.predict(np.expand_dims(dna_seq, axis=0))[0]
+
+        ohe_dna = dna_seq[:, :4]
+
+        # Calculate the complement (A<->T, C<->G) using vectorized operation
+        complement_dna = ohe_dna[:20, [3, 2, 1, 0]]
+
+        deviation = (prediction - complement_dna)
+        deviations += deviation
+
+    # Normalize
+    deviations /= len(dna_sequences)
+
+    # Concatenate the average deviations to the end of the matrix
+    average_per_position = np.mean(deviations, axis=1, keepdims=True)
+    graph_deviations = np.concatenate([deviations, average_per_position], axis=1)
+
+    average_per_nucleotide = np.mean(graph_deviations, axis=0, keepdims=True)
+    graph_deviations = np.concatenate([graph_deviations, average_per_nucleotide], axis=0)
+    debug_print(['shape', graph_deviations.shape])
+
+    # Create a figure and axis
+    fig, ax = plt.subplots(figsize=(10, 8))  # You can adjust the figure size as needed
+
+    # Create a heatmap
+    sns.heatmap(graph_deviations, annot=True, ax=ax, cmap='viridis')
+
+    # Set x-axis and y-axis labels
+    ax.set_xlabel('Nucleotides')
+    ax.set_ylabel('Position')
+
+    ax.set_xticklabels(['A', 'C', 'G', 'T', 'Average'])
+    position_labels = list(np.arange(1, len(deviations) + 1)) + ['Avg per Nucleotide']
+    ax.set_yticklabels(position_labels)
+    # Show the plot
+    plt.show()
+
+    return deviations            
+
+
