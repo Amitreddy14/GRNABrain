@@ -11,3 +11,17 @@ class Transformer(tf.keras.layers.Layer):
         self.head_size = head_size
         self.ff_dim = ff_dim
         self.dropout_rate = dropout
+
+    def build(self, input_shape):
+        self.attention = tf.keras.layers.MultiHeadAttention(
+            num_heads=self.num_heads,
+            key_dim=self.head_size
+        )
+        self.ffn = tf.keras.Sequential([
+            tf.keras.layers.Dense(self.ff_dim, activation='relu'),
+            tf.keras.layers.Dense(input_shape[-1])
+        ])
+        self.dropout1 = tf.keras.layers.Dropout(rate=self.dropout_rate)
+        self.dropout2 = tf.keras.layers.Dropout(rate=self.dropout_rate)
+        self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
+        self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-6)    
