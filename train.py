@@ -40,3 +40,16 @@ def train(models, X, Y, epochs, batch_size=64, validation_split=0.2, graph=True,
         plt.xlabel('epoch')
         plt.legend()
         plt.show()    
+        
+def train_multiproc(model, X, Y, epochs, batch_size=16, validation_split=0.2):
+    # doesn't really work
+    strategy = tf.distribute.MultiWorkerMirroredStrategy()
+    debug_print(['number of devices:', strategy.num_replicas_in_sync])
+
+    with strategy.scope():
+        model.compile(loss='categorical_crossentropy', optimizer=tf.keras.optimizers.legacy.Adam())
+
+    mirrored_X = tf.convert_to_tensor(X)
+    mirrored_Y = tf.convert_to_tensor(Y)
+    mirrored_dataset = tf.data.Dataset.from_tensor_slices((mirrored_X, mirrored_Y)).batch(batch_size)
+    dist_dataset = strategy.experimental_distribute_dataset(mirrored_dataset)     
