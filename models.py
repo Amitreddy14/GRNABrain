@@ -182,5 +182,18 @@ class ActorDense(tf.keras.Model):
         return self.Layers(X)
 
     def predict(self, X):
-        return self.call(X)      
+        return self.call(X)     
+
+    # Discriminators
+class CriticMLP(tf.keras.Model):
+    def __init__(self, name='test_discriminator', **kwargs):
+        super().__init__(name=name, **kwargs)
+        regularizer = tf.keras.regularizers.l2(0.0001)
+        self.flatten = tf.keras.layers.Flatten()
+        self.denseGRNA1 = tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=regularizer)
+        self.denseGRNA2 = tf.keras.layers.Dense(32, activation='relu', kernel_regularizer=regularizer)
+        self.denseSEQS1 = tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=regularizer)
+        self.denseSEQS2 = tf.keras.layers.Dense(32, activation='relu', kernel_regularizer=regularizer)
+        self.dense1 = tf.keras.layers.Dense(32, activation='relu', kernel_regularizer=regularizer)
+        self.dense2 = tf.keras.layers.Dense(1, activation='sigmoid', kernel_regularizer=regularizer) 
  
