@@ -301,3 +301,72 @@ def perturbation_analysis(gan, rnas, chromosomes, starts, ends, base, a=400, vie
             plt.show()
     
     return cumulative_percent_diff  
+
+def perturbation_map(gan, rnas, chromosomes, starts, ends, view_length=23, num_seqs=4):
+    X = np.zeros((len(rnas), view_length, 8))
+    
+    skipped = 0
+    skip = []
+    
+    for n in range(num_seqs):
+        try:
+            seq = preprocessing.fetch_genomic_sequence(chromosomes[n], starts[n], ends[n]).lower()
+            ohe_seq = np.concatenate([preprocessing.ohe_base(base) for base in seq], axis=0)
+            epigenomic_signals = preprocessing.fetch_epigenomic_signals(chromosomes[n], starts[n], ends[n])
+            epigenomic_seq = np.concatenate([ohe_seq, epigenomic_signals], axis=1)
+            if np.isnan(epigenomic_seq).any():
+                skip.append(n)
+                continue
+                
+            X[n] = epigenomic_seq
+        except Exception as e:
+            skip.append(n)
+            continue
+            
+    pred_Yi = gan.generator(X)
+    pred = np.argmax(pred_Yi, axis=2)
+    real = np.argmax(rnas, axis=2)
+    real_Yi = gan.get_real_Yi(pred_Yi, pred, real)
+    
+    for n, (rna, chromosome, start, end) in enumerate(zip(rnas, chromosomes, starts, ends)):
+        if n >= num_seqs + skipped: continue
+        if n in skip:
+            skipped += 1
+            continue
+        
+        heatmap = np.zeros((len(rna), 4))
+        
+        base_activity_score = gan.discriminator([
+                        np.expand_dims(X[n], axis=0), 
+                        np.expand_dims(real_Yi[n], axis=0)
+                    ])
+        
+        Yn = real_Yi[n]
+        for i in range(len(rna)):
+            argmax = np.argmax(Yn[i])
+            for j in range(4):
+                if j == argmax:
+                    heatmap[i, j] = 0
+                    continue
+                else:
+                    perturbed_Yn = copy.deepcopy(Yn)
+                    perturbed_Yn[i, j], perturbed_Yn[i, argmax] = perturbed_Yn[i, argmax], perturbed_Yn[i, j]
+                    perturbed_activity_score = gan.discriminator([
+                        np.expand_dims(X[n], axis=0), 
+                        np.expand_dims(perturbed_Yn, axis=0)
+                    ])
+                    heatmap[i, j] = perturbed_activity_score - base_activity_score
+        
+        # inverse heatmap axis
+        heatmap = np.flip(heatmap, axis=1)
+
+        plt.figure(1)
+        plt.imshow(heatmap, cmap='inferno', origin='lower', aspect='auto', extent=(0, 20, 0, 4))
+        plt.colorbar(label='Activity Score')
+        plt.xlabel('Replacement Base')
+        plt.ylabel(f'gRNA Perturbation Index')
+        plt.yticks(np.arange(0, 20))
+        plt.xticks([0, 1, 2, 3],['a', 'g', 'c', 't'])
+        plt.grid(axis='y', linestyle='solid', alpha=0.7)
+        plt.title('Perturbation Analysis Heatmap')
+        plt.show()
