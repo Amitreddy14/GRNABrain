@@ -23,3 +23,15 @@ def discriminator_loss(real_output, pred_output, mismatch_output):
     mismatch_loss = tf.keras.losses.BinaryCrossentropy()(tf.zeros_like(mismatch_output), mismatch_output)
     total_loss = real_loss * lambda1 + fake_loss * lambda2 + mismatch_loss * lambda3
     return total_loss
+
+def generator_loss(pred, real, pred_output, mismatch_output):
+    lambda1 = 0.4
+    lambda2 = 0.5
+    lambda3 = 0.1
+    # BC(g_t, G(d_t))
+    gen  = tf.keras.losses.CategoricalCrossentropy()(real, pred)
+    # BC(1, D(G(d_t), d_t))
+    disc = tf.keras.losses.BinaryCrossentropy()(tf.ones_like(pred_output), pred_output)
+    # BC(0, D(G(d_t), d_rand))
+    disc_mismatch = tf.keras.losses.BinaryCrossentropy()(tf.zeros_like(pred_output), mismatch_output)
+    return gen * lambda1 + disc * lambda2 + disc_mismatch * lambda3
