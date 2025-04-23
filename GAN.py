@@ -65,4 +65,22 @@ class GAN(tf.keras.Model):
     def load_model(self):
         debug_print(['loading GAN'])
         self.generator.load_weights(f'models/{self.name}/generator.weights.h5')
-        self.discriminator.load_weights(f'models/{self.name}/discriminator.weights.h5')     
+        self.discriminator.load_weights(f'models/{self.name}/discriminator.weights.h5') 
+
+    def plot(self, gen_losses, disc_losses, gen_real_losses, gen_accuracies, disc_accuracies):
+        plt.plot(gen_losses, label='generator GAN loss')
+        plt.plot(disc_losses, label='discriminator GAN loss')
+        plt.plot(gen_real_losses, label='generator loss')
+        plt.title('GAN loss')
+        plt.ylabel('crossentropy loss')
+        plt.xlabel('epoch')
+        plt.legend()
+        plt.show()
+        
+        plt.plot(gen_accuracies, label='generator accuracy')
+        plt.plot(disc_accuracies, label='discriminator accuracy')
+        plt.title('GAN accuracy')
+        plt.ylabel('accuracy (0-1)')
+        plt.xlabel('epoch')
+        plt.legend()
+        plt.show()        
