@@ -100,3 +100,49 @@ def activity_test(gan, rnas, chromosomes, starts, ends, a=400, view_length=23, p
         real_Yi = gan.get_real_Yi(pred_Yi, pred, real)
         
     axis_index = 0
+
+    for n, (rna, chromosome, start, end) in enumerate(zip(rnas, chromosomes, starts, ends)):
+        if n >= num_seqs + skipped: continue
+        if n in skip:
+            skipped += 1
+            continue
+        preprocessing.debug_print(['running activity test on', preprocessing.str_bases(rna)])
+        bind_site = start
+        start -= a
+        end += a
+        
+        activity_scores = []
+        step = 1
+        for i in range(0, end - start - view_length, step):
+            if gan.discriminator.name == 'conv_discriminator' or gan.discriminator.name == 'critic_transformer_1':
+                activity_score = gan.discriminator([
+                    np.expand_dims(X[n][i:i+view_length], axis=0), 
+                    np.expand_dims(real_Yi[n], axis=0)
+                ])
+                for _ in range(step):
+                    activity_scores.append(activity_score[0][0].numpy())
+            else:
+                pass # finish
+        activity_scores = np.array(activity_scores)
+        moving_averages = activity_scores[23:]# moving_average(activity_scores, 100)
+        all_activity_scores += np.array(activity_scores)
+        sep_activity_scores.append(activity_scores)
+        if plot:
+            x = np.arange(start + view_length, end - view_length + 4)[:len(moving_averages)]
+            axis[axis_index].plot(x, moving_averages, label=preprocessing.str_bases(rna))
+            if experimental_efficacies is None:
+                axis[axis_index].axvline(x=bind_site, color='orange', linestyle='dotted', label='bind site')
+            else:
+                axis[axis_index].scatter(x=bind_site, y=experimental_efficacies[n], color='red', label='experimental efficacy')
+            axis[axis_index].legend()
+        
+        axis_index += 1
+    
+    if plot:
+        plt.xlabel('genomic position')
+        plt.ylabel('predicted activity')
+        plt.show()
+    
+    if return_sep:
+        return sep_activity_scores
+    return all_activity_scores / axis_index
