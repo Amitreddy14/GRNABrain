@@ -186,3 +186,11 @@ class GAN(tf.keras.Model):
                     
                     # compute accuracy of argmax of discriminator predicted output
                     disc_accuracy += (np.count_nonzero(pred_output < 0.5) + np.count_nonzero(real_output > 0.5)) / (X.shape[0] * X.shape[1] * 2)
+                
+                gradients_generator = gen_tape.gradient(gen_loss, self.generator.trainable_variables)
+                generator_optimizer.apply_gradients(zip(gradients_generator, self.generator.trainable_variables))
+
+                gradients_discriminator = disc_tape.gradient(disc_loss, self.discriminator.trainable_variables)
+                discriminator_optimizer.apply_gradients(zip(gradients_discriminator, self.discriminator.trainable_variables))
+
+                
