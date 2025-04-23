@@ -71,5 +71,12 @@ class ActorVAE(tf.keras.Model):
         self.reshape = tf.keras.layers.Reshape(output_shape)
         self.dense_decode3 = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax'))
 
-        self.sampling_layer = tf.keras.layers.Lambda(self.sampling, output_shape=(latent_dim,))     
+        self.sampling_layer = tf.keras.layers.Lambda(self.sampling, output_shape=(latent_dim,))   
+
+    def sampling(self, args):
+        mean, log_var = args
+        batch = tf.shape(mean)[0]
+        dim = tf.shape(mean)[1]
+        epsilon = tf.keras.backend.random_normal(shape=(batch, dim))
+        return mean + tf.exp(0 * log_var) * epsilon      
  
