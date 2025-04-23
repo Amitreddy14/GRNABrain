@@ -160,5 +160,27 @@ class ActorConvDeconv(tf.keras.Model):
         return output
 
     def predict(self, X):
-        return self.call(X)       
+        return self.call(X)     
+
+class ActorDense(tf.keras.Model):
+    def __init__(self, input_shape, output_shape, reg=0.01, name='actor_dense'):
+        super().__init__(name=name)
+
+        self.Layers = tf.keras.models.Sequential([
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(128, activation='relu'),
+            tf.keras.layers.Dropout(0.1),
+            tf.keras.layers.Dense(64, activation='relu'),
+            tf.keras.layers.Dropout(0.1),
+            tf.keras.layers.Dense(output_shape[0] * 4, activation='relu'),
+            tf.keras.layers.Dropout(0.1),
+            tf.keras.layers.Reshape(output_shape),
+            tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax'))
+        ])
+        
+    def call(self, X):
+        return self.Layers(X)
+
+    def predict(self, X):
+        return self.call(X)      
  
