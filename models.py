@@ -78,5 +78,13 @@ class ActorVAE(tf.keras.Model):
         batch = tf.shape(mean)[0]
         dim = tf.shape(mean)[1]
         epsilon = tf.keras.backend.random_normal(shape=(batch, dim))
-        return mean + tf.exp(0 * log_var) * epsilon      
+        return mean + tf.exp(0 * log_var) * epsilon 
+
+    def encode(self, x):
+        x = self.transformers(x)
+        x = self.flatten(x)
+        x = self.dense1(x)
+        mean = self.dense_mean(x)
+        log_var = self.dense_log_var(x)
+        return mean, log_var     
  
