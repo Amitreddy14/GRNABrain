@@ -86,5 +86,12 @@ class ActorVAE(tf.keras.Model):
         x = self.dense1(x)
         mean = self.dense_mean(x)
         log_var = self.dense_log_var(x)
-        return mean, log_var     
+        return mean, log_var    
+
+    def decode(self, z):
+        x = self.dense_decode1(z)
+        x = self.dense_decode2(x)
+        x = self.reshape(x)
+        x = self.dense_decode3(x)
+        return x 
  
