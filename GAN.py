@@ -215,3 +215,9 @@ class GAN(tf.keras.Model):
                     ' \n          discriminator GAN loss :', f'{disc_loss.numpy():05.5f}',
                     ' \n          discriminator accuracy :', f'{disc_accuracy:05.5f}'
                 ])
+
+        if save:
+            self.save_model(gen_losses, disc_losses, gen_real_losses, gen_accuracies, disc_accuracies)
+    
+        if plot:
+            self.plot(gen_losses, disc_losses, gen_real_losses, gen_accuracies, disc_accuracies)        
