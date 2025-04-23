@@ -370,3 +370,39 @@ def perturbation_map(gan, rnas, chromosomes, starts, ends, view_length=23, num_s
         plt.grid(axis='y', linestyle='solid', alpha=0.7)
         plt.title('Perturbation Analysis Heatmap')
         plt.show()
+
+def save_roc(x, y_true, model, file = 'models/roc.csv'):
+    y_pred = model.predict(x)
+
+    tprs = []
+    aucs = []
+    mean_fpr = np.linspace(0, 1, 100)
+
+    # Calculate and plot per-position and per-nucleotide ROC curve
+    for i in range(y_true.shape[1]):  # For each position in the sequence
+        for j in range(y_true.shape[2]):  # For each nucleotide
+            fpr, tpr, _ = roc_curve(y_true[:, i, j], y_pred[:, i, j])
+            roc_auc = auc(fpr, tpr)
+            aucs.append(roc_auc)
+            tprs.append(interp(mean_fpr, fpr, tpr))
+
+    mean_tpr = np.mean(tprs, axis=0)
+    mean_auc = auc(mean_fpr, mean_tpr)
+
+    sns.set_theme(style="darkgrid")
+    plt.figure()
+    plt.plot(mean_fpr, mean_tpr, color='blue', label=r'Mean ROC (AUC = %0.2f )' % (mean_auc), lw=2, alpha=1)
+
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('ROC')
+    plt.legend(loc="lower right")
+    plt.show()
+
+    # Save ROC curve data to file
+    df = pd.DataFrame({
+        'fpr': mean_fpr,
+        'tpr': mean_tpr,
+        'auc': mean_auc
+    })
+    df.to_csv(file, index=False)        
