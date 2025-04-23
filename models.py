@@ -257,5 +257,18 @@ class CriticTransformer1(tf.keras.Model):
         padded_grna = np.pad(grna, pad_width, mode='constant', constant_values=0)
         concat = np.concatenate([padded_grna, seqs], axis=2)
         x = concat[..., np.newaxis]
-        return x       
+        return x  
+
+    def call(self, x):
+        x = self.preprocess_input(*x)[:, :, :, 0]
+        x = self.transformers(x)
+        x = self.flatten(x)
+        x = self.dense1(x)
+        x = self.dense2(x)
+        x = self.dense3(x)
+        
+        return x
+
+    def predict(self, x):
+        return self.call(x)     
  
