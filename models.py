@@ -54,5 +54,22 @@ class ActorMLP(tf.keras.Model):
         x = self.reshape(x)
         x = self.out(x)
         
-        return x    
+        return x   
+
+class ActorVAE(tf.keras.Model):
+    def __init__(self, input_shape, output_shape, latent_dim=32, num_transformers=3, hidden_size=32, name='actor_vae'):
+        super().__init__(name=name)
+
+        self.transformers = tf.keras.Sequential([Transformer(8, 8, hidden_size) for _ in range(num_transformers)])
+        self.flatten = tf.keras.layers.Flatten()
+        self.dense1 = tf.keras.layers.Dense(hidden_size, activation='relu')
+        self.dense_mean = tf.keras.layers.Dense(latent_dim)
+        self.dense_log_var = tf.keras.layers.Dense(latent_dim)
+
+        self.dense_decode1 = tf.keras.layers.Dense(hidden_size, activation='relu')
+        self.dense_decode2 = tf.keras.layers.Dense(output_shape[0] * output_shape[1], activation='relu')
+        self.reshape = tf.keras.layers.Reshape(output_shape)
+        self.dense_decode3 = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax'))
+
+        self.sampling_layer = tf.keras.layers.Lambda(self.sampling, output_shape=(latent_dim,))     
  
