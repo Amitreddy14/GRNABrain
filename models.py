@@ -287,5 +287,17 @@ class GuessBaseline():
         return Y_pred
     
     def predict(self, X):
-        return self.call(X)     
+        return self.call(X)    
+
+class CenterBaseline():
+    def __init__(self, Y, name="center_baseline"):
+        self.shape = Y.shape[1:]
+        self.name = name
+
+    def call(self, X):
+        Y_pred = np.full((X.shape[0],) + self.shape, 1 / self.shape[1])
+        return Y_pred
+    
+    def predict(self, X):
+        return self.call(X)      
  
