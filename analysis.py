@@ -146,3 +146,54 @@ def activity_test(gan, rnas, chromosomes, starts, ends, a=400, view_length=23, p
     if return_sep:
         return sep_activity_scores
     return all_activity_scores / axis_index
+
+def candidate_grna_range(gan, chromosome, start, end, a=400, view_length=23, num_seqs=5, plot=True):
+    
+    length = 2 * a + end - start - view_length
+    
+    debug_print(['generating best grna candidates for chromosome', chromosome, start, ':', end])
+    
+    seq = preprocessing.fetch_genomic_sequence(chromosome, start - a, end + a).lower()
+    ohe_seq = np.concatenate([preprocessing.ohe_base(base) for base in seq], axis=0)
+    epigenomic_signals = preprocessing.fetch_epigenomic_signals(chromosome, start - a, end + a)
+    epigenomic_seq = np.concatenate([ohe_seq, epigenomic_signals], axis=1)
+    X = epigenomic_seq
+    
+    best_seqs = [(0, np.inf, '', np.zeros(length)) for _ in range(num_seqs)]
+    for i in tqdm(range(length)):
+        X_gen = X[i:i + view_length]
+        Y_gen = gan.generate(np.expand_dims(X_gen, axis=0))
+        activity_scores = np.zeros(length)
+        target_activity = np.zeros(length)
+        target_activity[i] = 1
+        
+        for j in range(length):
+            X_disc = X[j:j + view_length]
+            activity_score = gan.discriminator([
+                np.expand_dims(X_disc, axis=0),
+                Y_gen
+            ])
+            activity_scores[j] = activity_score
+        
+        loss = tf.keras.losses.categorical_crossentropy(target_activity, activity_scores)
+        
+        Y_gen_ohe = tf.one_hot(tf.math.argmax(Y_gen, axis=2), 4, axis=2)[0]
+        tup = (i, loss, preprocessing.str_bases(Y_gen_ohe), activity_scores)
+        
+        for k in range(num_seqs):
+            if best_seqs[k][1] > tup[1]:
+                best_seqs[k], tup = tup, best_seqs[k]
+    
+    
+    if plot:
+        fig, axis = plt.subplots(num_seqs, 1, figsize=(8, num_seqs * 2))
+        axis[0].set_title('Best gRNA found for ' + chromosome + ' ' + str(start) + ':' + str(end))
+        for i in range(num_seqs):
+            x = np.arange(length)
+            axis[i].plot(x, best_seqs[i][3], label=best_seqs[i][2])
+            axis[i].legend()
+        plt.xlabel('genomic position')
+        plt.ylabel('predicted activity')
+        plt.show()
+    
+    return best_seqs
