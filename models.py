@@ -240,4 +240,16 @@ class CriticConv(tf.keras.Model):
         x = self.dense3(x)
 
         return x    
+    
+class CriticTransformer1(tf.keras.Model):
+    def __init__(self, input_shape, num_transformers=3, hidden_size=32, name='critic_transformer_1'):
+        super().__init__(name=name)
+
+        self.transformers = tf.keras.Sequential([Transformer(8, 4, hidden_size) for _ in range(num_transformers)])
+        self.flatten = tf.keras.layers.Flatten()
+        self.dense1 = tf.keras.layers.Dense(hidden_size, activation='relu')
+        self.dense2 = tf.keras.layers.Dense(hidden_size, activation='relu')
+        self.dense3 = tf.keras.layers.Dense(1, activation='sigmoid') 
+        
+           
  
