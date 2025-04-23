@@ -60,4 +60,9 @@ class GAN(tf.keras.Model):
             'gen_accuracies': gen_accuracies,
             'disc_accuracies': disc_accuracies
         })
-        df.to_csv(f'models/{self.name}/metrics.csv', index=False)    
+        df.to_csv(f'models/{self.name}/metrics.csv', index=False)   
+
+    def load_model(self):
+        debug_print(['loading GAN'])
+        self.generator.load_weights(f'models/{self.name}/generator.weights.h5')
+        self.discriminator.load_weights(f'models/{self.name}/discriminator.weights.h5')     
