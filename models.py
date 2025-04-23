@@ -94,4 +94,13 @@ class ActorVAE(tf.keras.Model):
         x = self.reshape(x)
         x = self.dense_decode3(x)
         return x 
+    
+    def call(self, x):
+        mean, log_var = self.encode(x)
+        z = self.sampling_layer([mean, log_var])
+        reconstructed = self.decode(z)
+        return reconstructed
+
+    def predict(self, x):
+        return self.call(x)
  
