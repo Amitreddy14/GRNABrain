@@ -201,3 +201,17 @@ class GAN(tf.keras.Model):
             gen_accuracies.append(gen_accuracy)
             disc_losses.append(disc_loss.numpy())
             disc_accuracies.append(disc_accuracy)    
+
+            if epoch % print_interval == 0:
+                if validation_data == ():
+                    gen_real_loss = str(gen_real_loss) + ' *'
+                    gen_accuracy = str(gen_accuracy) + ' *'
+
+                preprocessing.debug_print([
+                    'epoch', f'{epoch:04}',
+                    ':\n              generator GAN loss :', f'{gen_loss.numpy():05.5f}',
+                    ' \n                  generator loss :', f'{gen_real_loss:05.5f}',
+                    ' \n              generator accuracy :', f'{gen_accuracy:05.5f}',
+                    ' \n          discriminator GAN loss :', f'{disc_loss.numpy():05.5f}',
+                    ' \n          discriminator accuracy :', f'{disc_accuracy:05.5f}'
+                ])
