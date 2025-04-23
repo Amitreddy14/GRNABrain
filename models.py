@@ -311,5 +311,9 @@ class MeanBaseline():
         return Y_pred
     
     def predict(self, X):
-        return self.call(X)       
+        return self.call(X)   
+
+class PairBaseline():
+    def __init__(self, name="pair_baseline"):
+        self.name = name        
  
