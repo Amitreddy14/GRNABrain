@@ -144,3 +144,15 @@ class GAN(tf.keras.Model):
             gen_loss = None
             disc_loss = None
             disc_accuracy = 0
+
+            for i in tqdm(range(X.shape[0]), desc='epoch {} / {} : confidence {:.2f}'.format(str(epoch).zfill(4), str(epochs).zfill(4), confidence)):
+                # add noise to generator input
+                generated_probs = self.generator(X[i])
+
+                # compute prediction confidence by deviation from mean prediction
+                confidence = tf.keras.losses.MeanSquaredError()(generated_probs, mean_probs) * 100
+                
+                # generated sequences as the argmax of predicted input (unused)
+                generated_sequences = tf.one_hot(tf.math.argmax(generated_probs, axis=2), 4, axis=2)
+
+                
