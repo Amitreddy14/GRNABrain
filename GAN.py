@@ -155,4 +155,34 @@ class GAN(tf.keras.Model):
                 # generated sequences as the argmax of predicted input (unused)
                 generated_sequences = tf.one_hot(tf.math.argmax(generated_probs, axis=2), 4, axis=2)
 
-                
+                with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+                    # get the generator output G(d_t)
+                    pred_Yi = self.generator(X[i])
+                    pred = np.argmax(pred_Yi, axis=2)
+                    real = np.argmax(Y[i], axis=2)
+                    real_Yi = self.get_real_Yi(pred_Yi, pred, real)
+                    
+                    # get the real (ground truth) and pred (generator) discriminator outputs
+                    real_output = self.discriminator([X[i], real_Yi])
+                    pred_output = self.discriminator([X[i], pred_Yi])
+                    
+                    # get the discriminator output for different permutations of seqs
+                    mismatch_output_1 = self.discriminator([X[np.random.randint(0, len(X))], Y[i]])
+                    indices = list(range(0, len(X[i])))
+                    np.random.shuffle(indices)
+                    mismatch_output_2 = self.discriminator([X[i][indices], Y[i]])
+                    np.random.shuffle(indices)
+                    mismatch_output_3 = self.discriminator([X[i][indices], pred_Yi])
+                    mismatch_output = tf.concat([mismatch_output_1, mismatch_output_2, mismatch_output_3], axis=0)
+                    gen_mismatch_output = self.discriminator([X[np.random.randint(0, len(X))], pred_Yi])
+
+                    # compute loss:
+                    # G_loss = lambda1 * BC(g_t, G(d_t)) + lambda2 * BC(1, D(G(d_t), d_t)) + lambda3 * BC(0, D(G(d_t), d_rand))
+                    gen_loss = generator_loss(pred_Yi, Y[i], pred_output, gen_mismatch_output)
+                    # D_loss = lambda1 * BC(1, D(g_t, d_t)) + lambda2 * (BC(0, D(G(d_t), d_t)) + BC(0, D(g_t, d_rand)))
+                    disc_loss = discriminator_loss(real_output, pred_output, mismatch_output)
+                    # print(gen_loss.numpy(), disc_loss.numpy())
+                    # print(pred_output.numpy(), real_output.numpy())
+                    
+                    # compute accuracy of argmax of discriminator predicted output
+                    disc_accuracy += (np.count_nonzero(pred_output < 0.5) + np.count_nonzero(real_output > 0.5)) / (X.shape[0] * X.shape[1] * 2)
