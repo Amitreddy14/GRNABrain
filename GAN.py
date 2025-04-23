@@ -112,4 +112,28 @@ class GAN(tf.keras.Model):
         
         if load:
             self.load_model()
-            return      
+            return    
+
+        if summary:
+            print()
+            debug_print(['generator architecture:'])
+            self.generator.summary()
+            print()
+            debug_print(['discriminator architecture:'])
+            self.discriminator.summary()
+            print()
+        
+        debug_print(['training GAN'])
+        generator_optimizer = tf.keras.optimizers.legacy.Adam(learning_rate)
+        discriminator_optimizer = tf.keras.optimizers.legacy.Adam(learning_rate)
+
+        mean_probs = np.full(Y[0].shape, .25)
+        
+        gen_losses = []
+        gen_real_losses = []
+        gen_accuracies = []
+        gen_confidence = []
+        disc_losses = []
+        disc_accuracies = []
+        
+        confidence = 0  
