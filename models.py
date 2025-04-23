@@ -126,5 +126,31 @@ class ActorTransformer1(tf.keras.Model):
         return x
 
     def predict(self, x):
-        return self.call(x)     
+        return self.call(x)  
+
+class ActorConvDeconv(tf.keras.Model):
+    def __init__(self, input_shape, output_shape, latent_size=(20 * 4 - 6), name='actor_conv_deconv'):
+        super().__init__(name=name)
+
+        latent_size = output_shape[0] * 4 - 6
+
+        self.Encoder = tf.keras.models.Sequential([
+            tf.keras.layers.Reshape(list(input_shape) + [1,]),
+            tf.keras.layers.Conv1D(filters=64, kernel_size=3, activation='relu', padding='same'),
+            tf.keras.layers.Conv1D(filters=64, kernel_size=3, activation='relu', padding='same'),
+            tf.keras.layers.Conv1D(filters=64, kernel_size=3, activation='relu', padding='same'),
+
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(latent_size)
+        ])
+
+        self.Decoder = tf.keras.models.Sequential([
+            tf.keras.layers.Reshape((latent_size, 1)),
+            tf.keras.layers.Conv1DTranspose(filters=32, kernel_size=3, activation='relu', padding='valid'),
+            tf.keras.layers.Conv1DTranspose(filters=8, kernel_size=3, activation='relu', padding='valid'),
+            tf.keras.layers.Conv1DTranspose(filters=1, kernel_size=3, activation='relu', padding='valid'),
+
+            tf.keras.layers.Reshape(output_shape),
+            tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(4, activation='softmax', use_bias=False))
+        ])       
  
