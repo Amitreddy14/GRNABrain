@@ -213,4 +213,13 @@ class CriticMLP(tf.keras.Model):
         x = self.dense2(x)
 
         return x    
+    
+class CriticConv(tf.keras.Model):
+    def __init__(self, input_shape=(23, 12, 1), name='conv_discriminator', **kwargs):
+        super().__init__(name=name, **kwargs)
+        self.conv1 = tf.keras.layers.Conv2D(filters=64, kernel_size=(3, input_shape[2]), padding='valid', activation='relu')
+        self.flatten = tf.keras.layers.Flatten()
+        self.dense1 = tf.keras.layers.Dense(64, activation='relu')
+        self.dense2 = tf.keras.layers.Dense(32, activation='relu')
+        self.dense3 = tf.keras.layers.Dense(1, activation='sigmoid')    
  
