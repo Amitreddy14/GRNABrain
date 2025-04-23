@@ -66,3 +66,15 @@ def train_multiproc(model, X, Y, epochs, batch_size=16, validation_split=0.2):
         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
         return loss    
+    
+    for epoch in range(epochs):
+        total_loss = 0.0
+        num_batches = 0
+        for inputs in dist_dataset:
+            loss = strategy.run(train_step, args=(inputs,))
+            total_loss += strategy.reduce(tf.distribute.ReduceOp.SUM, loss, axis=None)
+            num_batches += 1
+
+        average_loss = total_loss / num_batches
+
+        debug_print(['epoch', epoch, 'loss :', average_loss])
