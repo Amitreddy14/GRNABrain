@@ -130,4 +130,32 @@ def main(load_data=False):
 
     validation_activity_map(gan, num_seqs=10)
 
+    '''
+    validate_against_efficacies(gan)
     
+    activity_test(
+            gan=gan,
+            rnas=rnas,
+            chromosomes=chromosomes,
+            starts=starts,
+            ends=ends,
+            a=50,
+            num_seqs=2)
+    
+    diffs = []
+    for base in ['a', 'g', 'c', 't']:
+        diff = perturbation_analysis(
+            gan=gan,
+            rnas=rnas,
+            chromosomes=chromosomes,
+            starts=starts,
+            ends=ends,
+            base=base,
+            num_seqs=30,
+            a=50,
+            plot=False
+        )
+        diff = np.array(diff).mean(axis=0)
+        diffs.append(diff)
+
+
