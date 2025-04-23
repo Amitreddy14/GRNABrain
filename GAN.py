@@ -220,4 +220,11 @@ class GAN(tf.keras.Model):
             self.save_model(gen_losses, disc_losses, gen_real_losses, gen_accuracies, disc_accuracies)
     
         if plot:
-            self.plot(gen_losses, disc_losses, gen_real_losses, gen_accuracies, disc_accuracies)        
+            self.plot(gen_losses, disc_losses, gen_real_losses, gen_accuracies, disc_accuracies)  
+
+class MLPGAN(GAN):
+    def __init__(self, input_shape, output_shape, name='mlp_gan', **kwargs):
+        super().__init__(input_shape, output_shape, 
+                         ActorMLP(output_shape), 
+                         CriticMLP(), 
+                         name=name, **kwargs)
