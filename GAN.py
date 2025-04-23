@@ -88,4 +88,14 @@ class GAN(tf.keras.Model):
     def generate(self, seqs):
         # introduce noise
         seqs += tf.random.normal(seqs.shape) * 0.1
-        return self.generator(seqs)           
+        return self.generator(seqs)   
+
+    def get_real_Yi(self, pred_Yi, pred, real):
+        real_Yi = pred_Yi.numpy()
+
+        # define real_Yi (g_t) as the corrected probabilities from pred_Yi
+        for m in range(real_Yi.shape[0]):
+            for n in range(real_Yi.shape[1]):
+                real_Yi[m][n][pred[m][n]], real_Yi[m][n][real[m][n]] = real_Yi[m][n][real[m][n]], real_Yi[m][n][pred[m][n]]
+                
+        return real_Yi        
