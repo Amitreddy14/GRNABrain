@@ -49,9 +49,27 @@ def generate_candidate_grna(gan, rna, chromosome, start, end, a=400, view_length
     print(candidate_grna_set)
     filtered_candidate_grna = np.array(filtered_candidate_grna)
 
-     debug_print(['generating candidate grna for', seq, ':'])
+    debug_print(['generating candidate grna for', seq, ':'])
     debug_print(['      [correct grna]', preprocessing.str_bases(rna)])
     for grna in candidate_grna:
         debug_print(['     ', preprocessing.str_bases(grna)])
     
     activity_test(gan, filtered_candidate_grna, chromosomes, starts, ends, a, view_length, plot, filtered_candidate_grna.shape[0], True)
+
+def activity_test(gan, rnas, chromosomes, starts, ends, a=400, view_length=23, plot=True, num_seqs=None, test_rna=False, return_sep=False, experimental_efficacies=None):
+    if not num_seqs: num_seqs = len(rnas)
+    
+    def moving_average(x, w):
+        return np.convolve(x, np.ones(w), 'valid') / w
+
+    if plot:
+        fig, axis = plt.subplots(num_seqs, 1, figsize=(8, num_seqs * 2))
+        axis[0].set_title('GRNA activity')
+    
+    skipped = 0
+    skip = []
+    
+    all_activity_scores = np.zeros(2 * a - 1)
+    sep_activity_scores = []
+    X_gen = np.zeros((len(rnas), view_length, 8))
+    X = np.zeros((len(rnas), view_length + 2 * a, 8))
