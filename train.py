@@ -78,3 +78,15 @@ def train_multiproc(model, X, Y, epochs, batch_size=16, validation_split=0.2):
         average_loss = total_loss / num_batches
 
         debug_print(['epoch', epoch, 'loss :', average_loss])
+
+def main(load_data=False):
+    ## Preprocessing
+    if load_data:
+        df = preprocessing.extract_data()
+        seqs, grna = preprocessing.load_data()
+    else:
+        df = preprocessing.extract_data()
+        seqs, grna = preprocessing.get_train_test(df, 1e4)
+        debug_print(['saving preprocessed data'])
+        np.save('data/seqs.npy', seqs)
+        np.save('data/grna.npy', grna)        
