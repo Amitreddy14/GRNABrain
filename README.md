@@ -1,4 +1,4 @@
-# LIGAND<br><sup>Locus Inference and Generative Adversarial Network for gRNA Design</sup>
+# GRNABrain<br><sup>Locus Inference and Generative Adversarial Network for gRNA Design</sup>
 
 ### Abstract
 
